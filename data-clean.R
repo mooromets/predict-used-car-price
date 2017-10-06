@@ -16,22 +16,29 @@ clean_auto<-filter(auto, brand != "sonstige_autos", # brand clearly identified
             # drop some variables
             select (-c(dateCrawled, seller, offerType, abtest, monthOfRegistration,
                        nrOfPictures, dateCreated, lastSeen)
-                    ) %>%
+                    ) #%>%
             # adjust extraordinary low kilometer values to more trusty ones
             # (insurance companies in Germany use 15000 km/year in their formulas), 
             # but we allow 10000 km/year as a more or less sensible minimun 
-            mutate (kilometer = ifelse((2017 - yearOfRegistration) * 10000 <= kilometer, 
-                                            kilometer, 
-                                           (2017 - yearOfRegistration) * 10000
-                                           )
-                    )
+#            mutate (kilometer = ifelse((2017 - yearOfRegistration) * 10000 <= kilometer, 
+#                                            kilometer, 
+#                                           (2017 - yearOfRegistration) * 10000
+#                                           )
+#                    )
 
 postal <- read.csv("./data/de_postal_codes.csv", 
                    colClasses = c("character", NULL, NULL, "factor", rep(NULL, 4)))
 
 clean_auto <- left_join(clean_auto,
-                        postal[ ,c("Postal.Code", "State.Abbreviation")],
+                        postal[ ,c("Postal.Code", "State.Abbreviation", "State")],
                         by = c("postalCode" = "Postal.Code"))
+
+clean_auto$State <- as.character(clean_auto$State)
+Encoding(clean_auto$State) <- "latin1"
+clean_auto$State <- paste0("(", 
+                           as.character(clean_auto$State.Abbreviation),
+                           ") ",
+                           clean_auto$State)
 
 ## convert to factor
 clean_auto$brand <- factor(clean_auto$brand)
@@ -40,8 +47,7 @@ clean_auto$postalCode <- factor(clean_auto$postalCode)
 clean_auto$fuelType <- factor(clean_auto$fuelType)
 clean_auto$notRepairedDamage <- factor(clean_auto$notRepairedDamage)
 clean_auto$vehicleType <- factor(clean_auto$vehicleType)
-clean_auto$State.Abbreviation <- factor(clean_auto$State.Abbreviation)
-
+clean_auto$State <- factor(clean_auto$State)
 
 ## free memory
 rm(auto, postal)
