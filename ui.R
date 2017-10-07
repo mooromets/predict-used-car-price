@@ -21,7 +21,6 @@ shinyUI(fluidPage(
                   choices = unique(as.character(clean_auto$brand)),
                   multiple = TRUE),
       uiOutput("modelControls"),
-#      conditionalPanel(        condition = "input.brand != ''",        selectInput("model", "Model: (may be multiple)",                     choices = getModels("input.brand")),                    multiple = TRUE)),
       selectInput("state", "State (may be multiple):", 
                   choices = unique(as.character(clean_auto$State)),
                   multiple = TRUE),
@@ -31,23 +30,25 @@ shinyUI(fluidPage(
       sliderInput("hp", "HorsePower:",
                   min = min(clean_auto$powerPS), max = max(clean_auto$powerPS),
                   value = c(min(clean_auto$powerPS), max(clean_auto$powerPS))),
-      selectInput("gearbox", "Gearbox:", 
-                  choices = unique(as.character(clean_auto$gearbox))),
-      selectInput("fuel", "Fuel:", 
-                  choices = unique(as.character(clean_auto$fuelType))),
+      radioButtons("gearbox", "Gearbox:", 
+                  choices = getRadioChoices("gearbox")),
+      selectInput("fuel", "Fuel (may be multiple):", 
+                  choices = unique(as.character(clean_auto$fuelType)),
+                  multiple = TRUE),
       radioButtons("damage", "Not repaired damage:", 
-                  choices = unique(as.character(clean_auto$notRepairedDamage)))
-
+                  choices = getRadioChoices("notRepairedDamage"))
       ),
     
     mainPanel(
-      fluidRow(textOutput("low"),textOutput("high")), 
-      fluidRow(textOutput("after"),textOutput("before")), 
-      fluidRow(textOutput("states")),
-      fluidRow(textOutput("brands")),
-      fluidRow(textOutput("models")),
-      fluidRow(textOutput("over", inline = TRUE), textOutput("under", inline = TRUE)),
-      fluidRow(textOutput("types"))
+      fluidRow(textOutput("obsTotal")),
+      plotOutput("plotlm")
+#      fluidRow(textOutput("low"),textOutput("high")), 
+#      fluidRow(textOutput("after"),textOutput("before")), 
+#      fluidRow(textOutput("states")),
+#      fluidRow(textOutput("brands")),
+#      fluidRow(textOutput("models")),
+#      fluidRow(textOutput("over", inline = TRUE), textOutput("under", inline = TRUE)),
+#      fluidRow(textOutput("types"))
     )
   )
 ))

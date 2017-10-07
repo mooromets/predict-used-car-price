@@ -16,15 +16,7 @@ clean_auto<-filter(auto, brand != "sonstige_autos", # brand clearly identified
             # drop some variables
             select (-c(dateCrawled, seller, offerType, abtest, monthOfRegistration,
                        nrOfPictures, dateCreated, lastSeen)
-                    ) #%>%
-            # adjust extraordinary low kilometer values to more trusty ones
-            # (insurance companies in Germany use 15000 km/year in their formulas), 
-            # but we allow 10000 km/year as a more or less sensible minimun 
-#            mutate (kilometer = ifelse((2017 - yearOfRegistration) * 10000 <= kilometer, 
-#                                            kilometer, 
-#                                           (2017 - yearOfRegistration) * 10000
-#                                           )
-#                    )
+                    )
 
 postal <- read.csv("./data/de_postal_codes.csv", 
                    colClasses = c("character", NULL, NULL, "factor", rep(NULL, 4)))
