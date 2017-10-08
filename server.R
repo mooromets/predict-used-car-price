@@ -5,7 +5,7 @@ shinyServer(function(input, output) {
 
   output$modelControls <- renderUI({
     models <- getModels(input$brand)
-    selectInput("model", "Models (may be multiple):", models, multiple = TRUE)
+    selectInput("model", "Models (multiple):", models, multiple = TRUE)
   })
   
   auto_data <- reactive({
@@ -13,12 +13,11 @@ shinyServer(function(input, output) {
   })
 
   output$obsTotal <- renderText(
-    paste(as.character(dim(auto_data())[1]), "results of total 293000"))
+    paste(as.character(dim(auto_data())[1]), "results of total 293 thousands"))
   
   pricePredict <- reactive({
-    mod <- lm(price ~ yearOfRegistration, vehicleType, gear)
+    fast_lm(auto_data())
   })
-  
   
 #  output$low <- renderText(input$price[1])
 #  output$high <- renderText(input$price[2])

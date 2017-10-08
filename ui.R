@@ -4,7 +4,7 @@ source("./utils.R")
 shinyUI(fluidPage(
   sidebarLayout(
     sidebarPanel(
-      h3("Filters:"),
+      h4("Filters:"),
       sliderInput("price", "Price (Euro):",
                   min = 100, max = 150000,
                   value = c(3000, 100000),
@@ -17,30 +17,43 @@ shinyUI(fluidPage(
                   min = 0, max = max(clean_auto$kilometer),
                   value = c(0, 100000),
                   step = 10000),
-      selectInput("brand", "Brand (may be multiple):", 
-                  choices = unique(as.character(clean_auto$brand)),
-                  multiple = TRUE),
-      uiOutput("modelControls"),
-      selectInput("state", "State (may be multiple):", 
-                  choices = unique(as.character(clean_auto$State)),
-                  multiple = TRUE),
-      selectInput("type", "Vehicle type (may be multiple):", 
-                  choices = unique(as.character(clean_auto$vehicleType)),
-                  multiple = TRUE),
+      fluidRow(
+        column(6,
+               selectInput("brand", "Brand (multiple):", 
+                           choices = unique(as.character(clean_auto$brand)),
+                           multiple = TRUE)),
+        column(6,
+               uiOutput("modelControls"))
+      ),
       sliderInput("hp", "HorsePower:",
                   min = min(clean_auto$powerPS), max = max(clean_auto$powerPS),
                   value = c(min(clean_auto$powerPS), max(clean_auto$powerPS))),
-      radioButtons("gearbox", "Gearbox:", 
-                  choices = getRadioChoices("gearbox")),
-      selectInput("fuel", "Fuel (may be multiple):", 
-                  choices = unique(as.character(clean_auto$fuelType)),
-                  multiple = TRUE),
-      radioButtons("damage", "Not repaired damage:", 
-                  choices = getRadioChoices("notRepairedDamage"))
+      fluidRow(
+        column(6,
+               radioButtons("damage", "Not repaired damage:", 
+                     choices = getRadioChoices("notRepairedDamage"))),
+        column(6,
+               radioButtons("gearbox", "Gearbox:", 
+                     choices = getRadioChoices("gearbox")))
+      ),
+      fluidRow(
+        column(6,
+               selectInput("type", "Vehicle type:", 
+                           choices = unique(as.character(clean_auto$vehicleType)),
+                           multiple = TRUE)),
+        column(6,
+               selectInput("fuel", "Fuel:", 
+                           choices = unique(as.character(clean_auto$fuelType)),
+                           multiple = TRUE))
+      ),
+      selectInput("state", "State (multiple allowed):", 
+                  choices = unique(as.character(clean_auto$State)),
+                  multiple = TRUE)
       ),
     
     mainPanel(
       fluidRow(textOutput("obsTotal")),
+      fluidRow(textOutput("time")),
       plotOutput("plotlm")
 #      fluidRow(textOutput("low"),textOutput("high")), 
 #      fluidRow(textOutput("after"),textOutput("before")), 
