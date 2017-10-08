@@ -49,11 +49,7 @@ filtered_auto <- function(input) {
 }
 
 fast_lm <- function(auto_data){
-  tmp <- auto_data %>% 
-    filter (!model %in% SkipValues$models, !brand %in% SkipValues$brands)
-  lm(price ~ vehicleType + yearOfRegistration + gearbox + powerPS + model +
-       kilometer + brand + notRepairedDamage,
-     data = tmp)
+  lm(price ~ yearOfRegistration + powerPS + kilometer, data = auto_data)
 }
 
 brandsAndModelsToSkip <- function (threshold = 10^-10) {
