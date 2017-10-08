@@ -13,13 +13,39 @@ getRadioChoices <- function (variable) {
   c("any", unlist(lapply(x, as.character)))
 }
 
+filterDoubleSliderInput <- function (data, quoVar, value) {
+  filter(data, UQ(quoVar) >= value[1] & UQ(quoVar) <= value[2])
+}
+
+filterSelectInput <- function (data, quoVar, value) {
+  if (length(value) > 0)
+    filter(data, UQ(quoVar) %in% value)
+  else
+    data
+}
+
+filterRadioInput <- function (data, quoVar, value) {
+  if (value != "any")
+    filter(data, UQ(quoVar) == value)
+  else
+    data
+}
+
+
 filtered_auto <- function(input) {
   require(dplyr)
-  (out <- filter(clean_auto, 
-                price >= input$price[1], price <= input$price[2],
-                yearOfRegistration >= input$year[1], yearOfRegistration <= input$year[2],
-                kilometer >= input$km[1], kilometer <= input$km[2],
-                powerPS >= input$hp[1], powerPS <= input$hp[2]))
+  (out <- clean_auto %>%
+    filterDoubleSliderInput(quo(price), input$price)%>%
+    filterDoubleSliderInput(quo(yearOfRegistration), input$year) %>%
+    filterDoubleSliderInput(quo(kilometer), input$km) %>%
+    filterDoubleSliderInput(quo(powerPS), input$hp) %>%
+    filterSelectInput(quo(brand), input$brand) %>%
+    filterSelectInput(quo(State), input$state) %>%
+    filterSelectInput(quo(fuelType), input$fuel) %>%
+    filterSelectInput(quo(vehicleType), input$type) %>%
+    filterSelectInput(quo(model), input$model) %>%
+    filterRadioInput(quo(notRepairedDamage), input$damage) %>%
+    filterRadioInput(quo(gearbox), input$gearbox))
 }
 
 fast_lm <- function(auto_data){
