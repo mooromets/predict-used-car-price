@@ -34,7 +34,7 @@ filterRadioInput <- function (data, quoVar, value) {
 
 filtered_auto <- function(input) {
   require(dplyr)
-  (out <- clean_auto %>%
+  clean_auto %>%
     filterDoubleSliderInput(quo(price), input$price)%>%
     filterDoubleSliderInput(quo(yearOfRegistration), input$year) %>%
     filterDoubleSliderInput(quo(kilometer), input$km) %>%
@@ -45,7 +45,7 @@ filtered_auto <- function(input) {
     filterSelectInput(quo(vehicleType), input$type) %>%
     filterSelectInput(quo(model), input$model) %>%
     filterRadioInput(quo(notRepairedDamage), input$damage) %>%
-    filterRadioInput(quo(gearbox), input$gearbox))
+    filterRadioInput(quo(gearbox), input$gearbox)
 }
 
 fast_lm <- function(auto_data){

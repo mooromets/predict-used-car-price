@@ -1,5 +1,7 @@
 library(shiny)
+library(ggplot2)
 source("./utils.R")
+
 
 shinyServer(function(input, output) {
 
@@ -19,21 +21,18 @@ shinyServer(function(input, output) {
     fast_lm(auto_data())
   })
   
-#  output$low <- renderText(input$price[1])
-#  output$high <- renderText(input$price[2])
-  
-#  output$after <- renderText(input$year[1])
-#  output$before <- renderText(input$year[2])
-  
-#  output$states <- renderText(paste(input$state))
-#  output$brands <- renderText(paste(input$brand))
-#  output$models <- renderText(paste(input$model))
-  
-#  output$over <- renderText(input$km[1])
-#  output$under <- renderText(input$km[2])
-  
-  
-#  output$types <- renderText(input$type)
-  
-  
+  output$plotlm <- renderPlot({
+
+    newdata <- auto_data() %>%
+      group_by(yearOfRegistration) %>%
+      summarise(
+        powerPS = mean(powerPS),
+        kilometer = mean(kilometer))
+
+    modelLines <- predict(pricePredict(), newdata = newdata)
+
+    qplot(x = newdata$yearOfRegistration, 
+          y = modelLines) + geom_line()
+
+  })  
 })

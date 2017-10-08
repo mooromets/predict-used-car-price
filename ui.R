@@ -10,7 +10,7 @@ shinyUI(fluidPage(
                   value = c(3000, 100000),
                   step = 100),
       sliderInput("year", "First registration (year):",
-                  min = 1975, max = 2016,
+                  min = 1975, max = 2015,
                   value = c(1995, 2012),
                   sep = NULL),
       sliderInput("km", "km:",
@@ -53,15 +53,7 @@ shinyUI(fluidPage(
     
     mainPanel(
       fluidRow(textOutput("obsTotal")),
-      fluidRow(textOutput("time")),
       plotOutput("plotlm")
-#      fluidRow(textOutput("low"),textOutput("high")), 
-#      fluidRow(textOutput("after"),textOutput("before")), 
-#      fluidRow(textOutput("states")),
-#      fluidRow(textOutput("brands")),
-#      fluidRow(textOutput("models")),
-#      fluidRow(textOutput("over", inline = TRUE), textOutput("under", inline = TRUE)),
-#      fluidRow(textOutput("types"))
     )
   )
 ))
