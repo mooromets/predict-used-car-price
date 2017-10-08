@@ -19,18 +19,15 @@ clean_auto<-filter(auto, brand != "sonstige_autos", # brand clearly identified
                     )
 
 postal <- read.csv("./data/de_postal_codes.csv", 
-                   colClasses = c("character", NULL, NULL, "factor", rep(NULL, 4)))
+                   colClasses = c("character", "NULL", "character", "character", "NULL", "numeric", "numeric", "NULL"))
 
 clean_auto <- left_join(clean_auto,
-                        postal[ ,c("Postal.Code", "State.Abbreviation", "State")],
+                        postal[ ,c("Postal.Code", "State.Abbreviation", "State",
+                                   "Latitude", "Longitude")],
                         by = c("postalCode" = "Postal.Code"))
 
-clean_auto$State <- as.character(clean_auto$State)
 Encoding(clean_auto$State) <- "latin1"
-clean_auto$State <- paste0("(", 
-                           as.character(clean_auto$State.Abbreviation),
-                           ") ",
-                           clean_auto$State)
+clean_auto$State <- paste0("(", clean_auto$State.Abbreviation, ") ", clean_auto$State)
 
 ## convert to factor
 clean_auto$brand <- factor(clean_auto$brand)

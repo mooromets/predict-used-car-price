@@ -1,4 +1,5 @@
 library(shiny)
+library(leaflet)
 source("./utils.R")
 
 shinyUI(fluidPage(
@@ -7,15 +8,15 @@ shinyUI(fluidPage(
       h4("Filters:"),
       sliderInput("price", "Price (Euro):",
                   min = 100, max = 150000,
-                  value = c(3000, 100000),
+                  value = c(2000, 50000),
                   step = 100),
       sliderInput("year", "First registration (year):",
                   min = 1975, max = 2015,
-                  value = c(1995, 2012),
+                  value = c(2000, 2015),
                   sep = NULL),
       sliderInput("km", "km:",
                   min = 0, max = max(clean_auto$kilometer),
-                  value = c(0, 100000),
+                  value = c(0, max(clean_auto$kilometer)),
                   step = 10000),
       fluidRow(
         column(6,
@@ -52,8 +53,10 @@ shinyUI(fluidPage(
       ),
     
     mainPanel(
-      fluidRow(textOutput("obsTotal")),
-      plotOutput("plotlm")
+      textOutput("obsTotal"),
+      plotOutput("plotlm", height = 300),
+      leafletOutput("onMap", height = 550)
+
     )
   )
 ))
