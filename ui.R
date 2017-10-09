@@ -1,8 +1,9 @@
 library(shiny)
 library(leaflet)
+source("./data-clean.R")
 source("./utils.R")
 
-shinyUI(fluidPage(
+Ui = fluidPage(
   sidebarLayout(
     sidebarPanel(
       h4("Filters:"),
@@ -72,4 +73,4 @@ shinyUI(fluidPage(
                           )
               )
   )
-))
+)

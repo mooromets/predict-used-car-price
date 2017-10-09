@@ -3,8 +3,7 @@ library(ggplot2)
 library(leaflet)
 source("./utils.R")
 
-
-shinyServer(function(input, output) {
+Server = function(input, output) {
 
   output$modelControls <- renderUI({
     models <- getModels(input$brand)
@@ -67,4 +66,4 @@ shinyServer(function(input, output) {
                        clusterOptions = markerClusterOptions())    
   })
 
-})
+}
