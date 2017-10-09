@@ -52,11 +52,15 @@ shinyUI(fluidPage(
                   multiple = TRUE)
       ),
     
-    mainPanel(
-      textOutput("obsTotal"),
-      plotOutput("plotlm", height = 300),
-      leafletOutput("onMap", height = 550)
-
-    )
+    mainPanel(tabsetPanel(type = "tabs",
+                          tabPanel("Price and offer",
+                                   br(),
+                                   textOutput("obsTotal"),
+                                   plotOutput("plotlm")),
+                          tabPanel("Offers on map",
+                                   br(),
+                                   leafletOutput("onMap", height = 700))
+                          )
+              )
   )
 ))
