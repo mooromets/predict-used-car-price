@@ -14,23 +14,34 @@ shinyServer(function(input, output) {
   auto_data <- reactive({
     filtered_auto(input)
   })
+  
+  prepr_data <- reactive ({
+    preprocess(auto_data())
+  })
 
   output$obsTotal <- renderText(
-    paste(as.character(dim(auto_data())[1]), "results of total 293 thousands"))
+    paste(as.character(dim(auto_data())[1]), "results of total 235 thousands"))
   
   pricePredict <- reactive({
-    fast_lm(auto_data())
+    fast_lm(prepr_data())
   })
   
   output$plotlm <- renderPlot({
-    newdata <- auto_data() %>%
-      group_by(yearOfRegistration) %>%
-      summarise(
-        powerPS = mean(powerPS),
-        kilometer = mean(kilometer))
-    modelLines <- predict(pricePredict(), newdata = newdata)
-    qplot(x = newdata$yearOfRegistration, 
-          y = modelLines) + geom_line()
+#    newdata <- auto_data() %>%
+#      group_by(yearOfRegistration) %>%
+#      summarise(
+#        powerPS = mean(powerPS),
+#        kilometer = mean(kilometer))
+    tmp <- prepr_data()
+    Ys <- predict(pricePredict())
+    ggplot() +
+      geom_point(aes(x = tmp$yearOfRegistration, y = Ys)) + 
+      geom_boxplot(aes(x = tmp$yearOfRegistration, y = Ys, group = tmp$yearOfRegistration))    
+    
+    
+#    modelLines <- predict(pricePredict())
+#    qplot(x = auto_data()$yearOfRegistration, 
+#          y = modelLines) + geom_line()
   })
   
   output$onMap <- renderLeaflet({

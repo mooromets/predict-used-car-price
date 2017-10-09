@@ -29,6 +29,7 @@ clean_auto <- left_join(clean_auto,
 Encoding(clean_auto$State) <- "latin1"
 clean_auto$State <- paste0("(", clean_auto$State.Abbreviation, ") ", clean_auto$State)
 
+clean_auto <- clean_auto[complete.cases(clean_auto), ]
 ## convert to factor
 clean_auto$brand <- factor(clean_auto$brand)
 clean_auto$gearbox <- factor(clean_auto$gearbox)

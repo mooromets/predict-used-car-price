@@ -48,8 +48,15 @@ filtered_auto <- function(input) {
     filterRadioInput(quo(gearbox), input$gearbox)
 }
 
+preprocess <- function(auto_data) {
+  auto_data %>% filter (!model %in% SkipValues$models, 
+                        !brand %in% SkipValues$brands)
+}
+
 fast_lm <- function(auto_data){
-  lm(price ~ yearOfRegistration + powerPS + kilometer, data = auto_data)
+  lm(price ~ vehicleType + yearOfRegistration + gearbox + powerPS + model +
+       kilometer + brand + notRepairedDamage, 
+     data = preprocess(auto_data))  
 }
 
 brandsAndModelsToSkip <- function (threshold = 10^-10) {
