@@ -12,11 +12,11 @@ shinyUI(fluidPage(
                   step = 100),
       sliderInput("year", "First registration (year):",
                   min = 1975, max = 2015,
-                  value = c(2000, 2015),
+                  value = c(2005, 2015),
                   sep = NULL),
       sliderInput("km", "km:",
                   min = 0, max = max(clean_auto$kilometer),
-                  value = c(0, max(clean_auto$kilometer)),
+                  value = c(0, 100000),
                   step = 10000),
       fluidRow(
         column(6,
@@ -55,11 +55,20 @@ shinyUI(fluidPage(
     mainPanel(tabsetPanel(type = "tabs",
                           tabPanel("Price and offer",
                                    br(),
-                                   textOutput("obsTotal"),
-                                   plotOutput("plotlm")),
+                                   h6(textOutput("obsTotal")),
+                                   fluidRow(
+                                     column(4, h5(textOutput("q1st"))),
+                                     column(4, h5(textOutput("median"))),
+                                     column(4, h5(textOutput("q3rd")))
+                                   ),
+                                   plotOutput("plotlm"),
+                                   plotOutput("plotyear", height = 200),
+                                   plotOutput("plotkm", height = 200),
+                                   a("https://github.com/mooromets/predict-used-car-price")),
                           tabPanel("Offers on map",
                                    br(),
-                                   leafletOutput("onMap", height = 700))
+                                   leafletOutput("onMap", height = 700),
+                                   a("https://github.com/mooromets/predict-used-car-price"))
                           )
               )
   )

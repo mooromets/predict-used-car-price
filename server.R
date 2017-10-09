@@ -16,23 +16,41 @@ shinyServer(function(input, output) {
   })
 
   output$obsTotal <- renderText(
-    paste(as.character(dim(auto_data())[1]), "results of total 293 thousands"))
-  
+    paste(as.character(dim(auto_data())[1]), "items of total 293 thousands in database"))
+  output$q1st <- renderText(paste("1st quartile:",
+                                  as.character(quantile(auto_data()$price, probs = .25)),
+                                  "Euro"))
+  output$median <- renderText(paste("Median:",
+                                  as.character(quantile(auto_data()$price, probs = .5)),
+                                  "Euro"))
+  output$q3rd <- renderText(paste("3rd quartile:",
+                                  as.character(quantile(auto_data()$price, probs = .75)),
+                                  "Euro"))
+    
   pricePredict <- reactive({
     fast_lm(auto_data())
   })
   
   output$plotlm <- renderPlot({
-    newdata <- auto_data() %>%
-      group_by(yearOfRegistration) %>%
-      summarise(
-        powerPS = mean(powerPS),
-        kilometer = mean(kilometer))
-    modelLines <- predict(pricePredict(), newdata = newdata)
-    qplot(x = newdata$yearOfRegistration, 
-          y = modelLines) + geom_line()
+    tmp <- auto_data()
+    Ys <- predict(pricePredict())
+    ggplot() +
+      geom_boxplot(aes(x = tmp$yearOfRegistration, y = Ys, group = tmp$yearOfRegistration)) +
+      labs(x = "Year of the first registration", y = "Price (Euro)")
   })
   
+  output$plotyear <- renderPlot({
+    ggplot(auto_data(), aes(yearOfRegistration)) + 
+      geom_histogram(binwidth = 1) +
+      labs(x = "Year of the first registration")
+  })
+
+  output$plotkm <- renderPlot({
+    ggplot(auto_data(), aes(kilometer)) + 
+      geom_histogram(binwidth = 10000) +
+      labs(x = "Total kilometers")
+  })
+
   output$onMap <- renderLeaflet({
     postalData <- auto_data() %>% 
       group_by(postalCode) %>%
