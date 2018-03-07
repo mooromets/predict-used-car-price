@@ -7,9 +7,28 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(randomForest)
+library(caret)
 ```
 
 ```{r prepare volkswagen data, warning = FALSE, message=FALSE}
 source("./data-clean.R")
 vw <- clean_auto[clean_auto[, "brand"] == "volkswagen", ]
+# remove NAs
+vw <- vw[complete.cases(vw), ]
+# convert y to factor
+vw$model <- as.factor(vw$model)
+# remove columns:
+vw <- vw[, -which(colnames(vw) %in% 
+                    c("Longitude", "Latitude", "postalCode", 
+                      "State.Abbreviation", "brand", "name"))]
+# number of models to predict:
+length(unlist(unique(vw[, "model"])))
+```
+## datasets
+``` {r}
+inTrain <- createDataPartition(y = vw$model, p=0.75, list=FALSE)
+training <- vw[inTrain, ]
+testing <- vw[-inTrain, ]
+dim(training)
 ```
