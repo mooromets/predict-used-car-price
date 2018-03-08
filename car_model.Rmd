@@ -32,3 +32,10 @@ training <- vw[inTrain, ]
 testing <- vw[-inTrain, ]
 dim(training)
 ```
+
+## Classification tree RPART 
+``` {r}
+modFit <- train(model ~ ., method = "rpart", data=training)
+pred <- predict (modFit, newdata = testing)
+confusionMatrix(pred, testing$model)
+```
