@@ -44,6 +44,25 @@ confusionMatrix(pred, testing$model)
 ``` {r random forest}
 #training
 modFit <- randomForest(model ~ ., method = "rpart", data=training)
+#predicting
 pred <- predict (modFit, newdata = testing)
+#results
 confusionMatrix(pred, testing$model)
+```
+
+## boosting
+``` {r boosting}
+#small sample
+vw_sm <- vw[sample(nrow(vw), size = 5000), ]
+inTrain_sm <- createDataPartition(y = vw_sm$model, p=0.75, list=FALSE)
+training_sm <- vw_sm[inTrain_sm, ]
+testing_sm <- vw[-inTrain_sm, ]
+
+#training
+modFit <- train(model ~ ., method = "gbm", data=training_sm, verbose = FALSE)
+#predicting
+pred <- predict (modFit, newdata = testing_sm)
+#results
+confusionMatrix(pred, testing_sm$model)
+
 ```
