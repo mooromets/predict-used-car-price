@@ -26,7 +26,7 @@ vw <- vw[, -which(colnames(vw) %in%
 length(unlist(unique(vw[, "model"])))
 ```
 ## datasets
-``` {r}
+``` {r vw datasets }
 inTrain <- createDataPartition(y = vw$model, p=0.75, list=FALSE)
 training <- vw[inTrain, ]
 testing <- vw[-inTrain, ]
@@ -34,8 +34,16 @@ dim(training)
 ```
 
 ## Classification tree RPART 
-``` {r}
+``` {r rpart}
 modFit <- train(model ~ ., method = "rpart", data=training)
+pred <- predict (modFit, newdata = testing)
+confusionMatrix(pred, testing$model)
+```
+
+## random forest
+``` {r random forest}
+#training
+modFit <- randomForest(model ~ ., method = "rpart", data=training)
 pred <- predict (modFit, newdata = testing)
 confusionMatrix(pred, testing$model)
 ```
