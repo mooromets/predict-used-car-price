@@ -53,10 +53,10 @@ confusionMatrix(pred, testing$model)
 ## boosting
 ``` {r boosting}
 #small sample
-vw_sm <- vw[sample(nrow(vw), size = 5000), ]
+vw_sm <- vw[sample(nrow(vw), size = 3000), ]
 inTrain_sm <- createDataPartition(y = vw_sm$model, p=0.75, list=FALSE)
 training_sm <- vw_sm[inTrain_sm, ]
-testing_sm <- vw[-inTrain_sm, ]
+testing_sm <- vw_sm[-inTrain_sm, ]
 
 #training
 modFit <- train(model ~ ., method = "gbm", data=training_sm, verbose = FALSE)
