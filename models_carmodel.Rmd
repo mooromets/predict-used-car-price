@@ -1,5 +1,5 @@
 ---
-title: "Car model"
+title: "Model choose for a car model prediction"
 author: "sergey"
 date: "March 7, 2018"
 output: html_document
@@ -43,7 +43,7 @@ confusionMatrix(pred, testing$model)
 ## random forest
 ``` {r random forest}
 #training
-modFit <- randomForest(model ~ ., method = "rpart", data=training)
+modFit <- randomForest(model ~ ., data=training)
 #predicting
 pred <- predict (modFit, newdata = testing)
 #results
