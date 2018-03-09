@@ -13,15 +13,8 @@ library(caret)
 
 ```{r prepare volkswagen data, warning = FALSE, message=FALSE}
 source("./data-clean.R")
-vw <- clean_auto[clean_auto[, "brand"] == "volkswagen", ]
-# remove NAs
-vw <- vw[complete.cases(vw), ]
-# convert y to factor
-vw$model <- as.factor(vw$model)
-# remove columns:
-vw <- vw[, -which(colnames(vw) %in% 
-                    c("Longitude", "Latitude", "postalCode", 
-                      "State.Abbreviation", "brand", "name"))]
+source("./ML_utils.R")
+vw <- getBrandDataset(clean_auto, "volkswagen")
 # number of models to predict:
 length(unlist(unique(vw[, "model"])))
 ```
