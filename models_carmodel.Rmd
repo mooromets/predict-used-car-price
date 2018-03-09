@@ -1,5 +1,5 @@
 ---
-title: "Model choose for a car model prediction"
+title: "Model choosing for a car model prediction"
 author: "sergey"
 date: "March 7, 2018"
 output: html_document
@@ -20,42 +20,34 @@ length(unlist(unique(vw[, "model"])))
 ```
 ## datasets
 ``` {r vw datasets }
-inTrain <- createDataPartition(y = vw$model, p=0.75, list=FALSE)
-training <- vw[inTrain, ]
-testing <- vw[-inTrain, ]
-dim(training)
+#small dataset
+dataset <- vw[sample(nrow(vw), size = 1000), ]
+
+
+inTrain <- createDataPartition(y = dataset$model, p=0.75, list=FALSE)
+training <- dataset[inTrain, ]
+testing <- dataset[-inTrain, ]
+#dim(training)
+```
+``` {r prepare}
+seed <- 798
+metric <- "Accuracy"
+control <- trainControl(method="repeatedcv", number=5, repeats=3)
 ```
 
-## Classification tree RPART 
-``` {r rpart}
-modFit <- train(model ~ ., method = "rpart", data=training)
-pred <- predict (modFit, newdata = testing)
-confusionMatrix(pred, testing$model)
+
+## learning 
+``` {r learning}
+modFit <- train(model ~ ., method = "rpart", metric = metric, data = dataset, trControl = control)
+results <- resamples(list(
+    rpart = modFit
+  ))
 ```
 
-## random forest
-``` {r random forest}
-#training
-modFit <- randomForest(model ~ ., data=training)
-#predicting
-pred <- predict (modFit, newdata = testing)
-#results
-confusionMatrix(pred, testing$model)
-```
-
-## boosting
-``` {r boosting}
-#small sample
-vw_sm <- vw[sample(nrow(vw), size = 3000), ]
-inTrain_sm <- createDataPartition(y = vw_sm$model, p=0.75, list=FALSE)
-training_sm <- vw_sm[inTrain_sm, ]
-testing_sm <- vw_sm[-inTrain_sm, ]
-
-#training
-modFit <- train(model ~ ., method = "gbm", data=training_sm, verbose = FALSE)
-#predicting
-pred <- predict (modFit, newdata = testing_sm)
-#results
-confusionMatrix(pred, testing_sm$model)
-
+## plot
+``` {r figures}
+# boxplot comparison
+bwplot(results)
+# Dot-plot comparison
+dotplot(results)
 ```
