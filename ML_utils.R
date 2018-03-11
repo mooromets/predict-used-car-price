@@ -10,3 +10,12 @@ getBrandDataset <- function(data, brand) {
                       c("Longitude", "Latitude", "postalCode", 
                         "State.Abbreviation", "brand", "name"))]
 }
+
+
+defModelFit <- function(method, seed, ...) {
+  print(system.time({
+    set.seed(seed)
+    modFit <- train(..., method = method)
+  }))
+  modFit
+}

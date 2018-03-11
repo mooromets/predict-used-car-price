@@ -18,17 +18,11 @@ vw <- getBrandDataset(clean_auto, "volkswagen")
 # number of models to predict:
 length(unlist(unique(vw[, "model"])))
 ```
-## datasets
-``` {r vw datasets }
+``` {r prepare}
 #small dataset
 dataset <- vw[sample(nrow(vw), size = 4000), ]
 
-#inTrain <- createDataPartition(y = dataset$model, p=0.75, list=FALSE)
-#training <- dataset[inTrain, ]
-#testing <- dataset[-inTrain, ]
-```
-
-``` {r prepare}
+#setup
 seed <- 798
 metric <- "Accuracy"
 control <- trainControl(method="cv", number=4)
@@ -37,51 +31,16 @@ control <- trainControl(method="cv", number=4)
 
 ## learning 
 ``` {r learning}
-system.time({
-  print(system.time({
-    set.seed(seed)
-    modPart <- train(model ~ ., method = "rpart", metric = metric, data = dataset, trControl = control)
-  }))
-  print(system.time({
-    set.seed(seed)
-    modRF <- train(model ~ ., method = "rf", metric = metric, data = dataset, trControl = control)
-  }))
-  print(system.time({
-    set.seed(seed)
-    modC50 <- train(model ~ ., method = "C5.0", metric = metric, data = dataset, trControl = control)
-  }))
-  print(system.time({
-    set.seed(seed)
-    modBag <- train(model ~ ., method = "treebag", metric = metric, data = dataset, trControl = control)
-  }))
-  print(system.time({
-    set.seed(seed)
-#    modGBM <- train(model ~ ., method = "gbm", metric = metric, data = dataset, trControl = control)
-  }))
-  print(system.time({
-    set.seed(seed)
-    modJ48 <- train(model ~ ., method = "J48", metric = metric, data = dataset, trControl = control)
-  }))
-  print(system.time({
-    set.seed(seed)
-#    modAda <- train(model ~ ., method = "adaboost", metric = metric, data = dataset, trControl = control)
-  }))
-  print(system.time({
-    set.seed(seed)
-    modPART <- train(model ~ ., method = "PART", metric = metric, data = dataset, trControl = control)
-  }))
-  
-  results <- resamples(list(
-      rpart = modFit,
-      rf = modRF,
-      c50 = modC50,
-      bagging = modBag
-#      ,GBM = modGBM
-      ,J48 = modJ48
-#      ,Ada = modAda
-      ,PART = modPART
-    ))
-})
+results <- resamples(
+  sapply(X = list("rpart", "rf", "C5.0", "treebag", "J48", "PART"),
+         FUN = defModelFit,
+         seed = seed,
+         form = model ~ .,
+         data = dataset,
+         metric = metric,
+         trControl = control,
+         simplify = FALSE,
+         USE.NAMES = TRUE))
 summary(results)
 ```
 
