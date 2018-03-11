@@ -26,13 +26,14 @@ dataset <- vw[sample(nrow(vw), size = 4000), ]
 seed <- 798
 metric <- "Accuracy"
 control <- trainControl(method="cv", number=4)
+preProc <- c("center", "scale")
 ```
 
 
 ## learning 
 ``` {r learning}
 results <- resamples(
-  sapply(X = list("rpart", "rf", "C5.0", "treebag", "J48", "PART"),
+  c(sapply(X = c("nb", "rpart", "rf", "C5.0", "treebag", "J48", "PART"), #gbm?
          FUN = defModelFit,
          seed = seed,
          form = model ~ .,
@@ -40,7 +41,17 @@ results <- resamples(
          metric = metric,
          trControl = control,
          simplify = FALSE,
-         USE.NAMES = TRUE))
+         USE.NAMES = TRUE),
+    sapply(X = c("glmnet", "svmRadial", "knn"),
+         FUN = defModelFit,
+         seed = seed,
+         form = model ~ .,
+         data = dataset,
+         metric = metric,
+         trControl = control,
+         preProcess = c("center", "scale"),
+         simplify = FALSE,
+         USE.NAMES = TRUE)))
 summary(results)
 ```
 
