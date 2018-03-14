@@ -1,6 +1,14 @@
 library(tidyverse)
 library(forcats)
 
+read_auto_cached <- function ()
+{
+  if (!exists("CACHED_AUTO_DATA"))
+    CACHED_AUTO_DATA <<- clean_auto_data()
+  
+  (CACHED_AUTO_DATA)
+}
+
 clean_auto_data <- function(path = "./data/",
                             fileClean = "clean_auto.csv") {
   
