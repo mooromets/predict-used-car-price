@@ -15,7 +15,7 @@ library(caret)
 source("./data-clean.R")
 source("./ML_utils.R")
 
-vw <- getBrandDataset(clean_auto_data(), "volkswagen")
+vw <- getBrandDataset(autoData(), "volkswagen")
 # number of models to predict:
 length(unlist(unique(vw[, "model"])))
 ```

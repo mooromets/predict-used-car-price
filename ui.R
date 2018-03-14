@@ -3,8 +3,6 @@ library(leaflet)
 source("./data-clean.R")
 source("./webapp_utils.R")
 
-clean_auto <- clean_auto_data()
-
 Ui = fluidPage(
   sidebarLayout(
     sidebarPanel(
@@ -18,20 +16,20 @@ Ui = fluidPage(
                   value = c(2005, 2015),
                   sep = NULL),
       sliderInput("km", "km:",
-                  min = 0, max = max(clean_auto$kilometer),
+                  min = 0, max = max(autoData()$kilometer),
                   value = c(0, 100000),
                   step = 10000),
       fluidRow(
         column(6,
                selectInput("brand", "Brand (multiple):", 
-                           choices = unique(as.character(clean_auto$brand)),
+                           choices = unique(as.character(autoData()$brand)),
                            multiple = TRUE)),
         column(6,
                uiOutput("modelControls"))
       ),
       sliderInput("hp", "HorsePower:",
-                  min = min(clean_auto$powerPS), max = max(clean_auto$powerPS),
-                  value = c(min(clean_auto$powerPS), max(clean_auto$powerPS))),
+                  min = min(autoData()$powerPS), max = max(autoData()$powerPS),
+                  value = c(min(autoData()$powerPS), max(autoData()$powerPS))),
       fluidRow(
         column(6,
                radioButtons("damage", "Not repaired damage:", 
@@ -43,15 +41,15 @@ Ui = fluidPage(
       fluidRow(
         column(6,
                selectInput("type", "Vehicle type:", 
-                           choices = unique(as.character(clean_auto$vehicleType)),
+                           choices = unique(as.character(autoData()$vehicleType)),
                            multiple = TRUE)),
         column(6,
                selectInput("fuel", "Fuel:", 
-                           choices = unique(as.character(clean_auto$fuelType)),
+                           choices = unique(as.character(autoData()$fuelType)),
                            multiple = TRUE))
       ),
       selectInput("state", "State (multiple allowed):", 
-                  choices = unique(as.character(clean_auto$State)),
+                  choices = unique(as.character(autoData()$State)),
                   multiple = TRUE)
       ),
     
