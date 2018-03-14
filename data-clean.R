@@ -1,6 +1,7 @@
 library(tidyverse)
 library(forcats)
 
+# return the cleaned auto data from a cache, if possible
 autoData <- function ()
 {
   if (!exists("CACHED_AUTO_DATA"))
@@ -9,9 +10,12 @@ autoData <- function ()
   (CACHED_AUTO_DATA)
 }
 
+
+# get clean data
+# The function reads pre-cleaned data from a file, 
+# otherwise reads raw data, cleans it and saves it to the file 
 clean_auto_data <- function(path = "./data/",
                             fileClean = "clean_auto.csv") {
-  
   cleanFullPath <- paste0(path, fileClean)
   
   if (file.exists(cleanFullPath)) {
@@ -24,6 +28,7 @@ clean_auto_data <- function(path = "./data/",
 }
 
 
+# perform cleaning raw data and return result
 full_auto_clean <- function(path = "./data/", 
                             fileRaw = "autos.csv",
                             postalCodes = "de_postal_codes.csv"){
@@ -73,5 +78,3 @@ full_auto_clean <- function(path = "./data/",
   
   clean_auto
 }
-
-
