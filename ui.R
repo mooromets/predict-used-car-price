@@ -1,7 +1,9 @@
 library(shiny)
 library(leaflet)
 source("./data-clean.R")
-source("./utils.R")
+source("./webapp_utils.R")
+
+clean_auto <- clean_auto_data()
 
 Ui = fluidPage(
   sidebarLayout(
