@@ -6,13 +6,23 @@ prepareBrandDataset <- function(data, brand) {
   out <- data[data[, "brand"] %in% brand, ]
   # remove NAs
   out <- out[complete.cases(out), ]
-  # convert y to factor
-  out$model <- as.factor(as.character(out$model))
+  # some factor variables might have lost some values
+  out <- vars2Factor(out, c("vehicleType", "model", "fuelType", "brand")) 
   # remove useless columns:
   out[, -which(colnames(out) %in% 
                       c("Longitude", "Latitude", "postalCode", 
-                        "State.Abbreviation", "name"))]
+                        "State.Abbreviation", "State", "name"))]
 }
+
+
+#convert to factors the selected variables in data.frame 
+vars2Factor <- function(df, var) {
+  df[, var] <- as.data.frame(apply(df[, var], 
+                                   2, 
+                                   function (x) as.factor(as.character(x))))
+  (df)
+}
+
 
 #fit a model with the specified seed before training
 defModelFit <- function(method, seed, ...) {
