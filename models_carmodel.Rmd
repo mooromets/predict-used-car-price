@@ -20,8 +20,10 @@ vw <- prepareBrandDataset(autoData(), "volkswagen")
 length(unlist(unique(vw[, "model"])))
 ```
 ``` {r prepare}
-#small dataset
-dataset <- vw[sample(nrow(vw), size = 4000), ]
+#small dataset with pre-cleaning
+dataset <- remove0variance(fixMissingFactors(vw[sample(nrow(vw), 
+                                                       size = 4000), 
+                                              ]))
 
 #setup
 seed <- 798

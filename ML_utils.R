@@ -1,6 +1,7 @@
 
 # get a subset from data with only selected brands
 # remove incomplete cases
+# remove not unique variables
 # remove columns not used in training
 prepareBrandDataset <- function(data, brand) {
   out <- data[data[, "brand"] %in% brand, ]
@@ -8,14 +9,22 @@ prepareBrandDataset <- function(data, brand) {
   out <- out[complete.cases(out), ]
   # some factor variables might have lost some values
   out <- vars2Factor(out, c("vehicleType", "model", "fuelType", "brand"))
-  # remove variables with 0 variance
-  out <- out[, apply(out, 2, function (x) length(unique(x))) > 1]  
+  # not unique variables
+  out <- remove0variance(out)  
   # remove useless columns:
   out[, -which(colnames(out) %in% 
                       c("Longitude", "Latitude", "postalCode", 
                         "State.Abbreviation", "State", "name", "X"))]
 }
 
+#fix missing factor values
+fixMissingFactors <- function(df){
+  vars2Factor(df = df,
+              var = names(df)[sapply(1:ncol(df), 
+                                     function(x, data) 
+                                       is.factor(data[,x]), 
+                                     df)])
+}
 
 #convert to factors the selected variables in data.frame 
 vars2Factor <- function(df, var) {
@@ -26,9 +35,15 @@ vars2Factor <- function(df, var) {
 }
 
 
+# remove variables with 0 variance
+remove0variance <- function(df) {
+  df[, apply(df, 2, function (x) length(unique(x))) > 1]
+}
+
+
 #fit a model with the specified seed before training
 defModelFit <- function(method, seed, ...) {
-  print(system.time({
+  cat("\n", method, ": \n", system.time({
     set.seed(seed)
     modFit <- train(..., method = method)
   }))
