@@ -7,11 +7,13 @@ prepareBrandDataset <- function(data, brand) {
   # remove NAs
   out <- out[complete.cases(out), ]
   # some factor variables might have lost some values
-  out <- vars2Factor(out, c("vehicleType", "model", "fuelType", "brand")) 
+  out <- vars2Factor(out, c("vehicleType", "model", "fuelType", "brand"))
+  # remove variables with 0 variance
+  out <- out[, apply(out, 2, function (x) length(unique(x))) > 1]  
   # remove useless columns:
   out[, -which(colnames(out) %in% 
                       c("Longitude", "Latitude", "postalCode", 
-                        "State.Abbreviation", "State", "name"))]
+                        "State.Abbreviation", "State", "name", "X"))]
 }
 
 
