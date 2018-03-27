@@ -11,12 +11,20 @@ vw <- prepareBrandDataset(autoData(), "volkswagen")
 dataset <- remove0variance(fixMissingFactors(vw[sample(nrow(vw), 
                                                        size = 4000), 
                                                 ]))
-
-#setup
 seed <- 8877
 metric <- "Accuracy"
-control <- trainControl(method="cv", number=4)
 
+# Random search
+control <- trainControl(method="cv", number=4, search="random")
+set.seed(seed)
+mtry <- sqrt(ncol(x))
+rf_random <- train(model~., data=dataset, method="rf", metric=metric, tuneLength=15, trControl=control)
+print(rf_random)
+plot(rf_random)
+
+
+# Number of trees 
+control <- trainControl(method="cv", number=4)
 modellist <- sapply(c(100, 500, 750, 1000, 1250, 1500), 
                     function(x) {
                       set.seed(seed)
@@ -33,7 +41,7 @@ modellist <- sapply(c(100, 500, 750, 1000, 1250, 1500),
                     },
                     simplify = FALSE,
                     USE.NAMES = TRUE)
-
 results <- resamples(modellist)
 summary(results)
-dotplot(results)
+plot(results)
+#dotplot(results)
