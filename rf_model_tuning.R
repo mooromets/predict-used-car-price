@@ -1,7 +1,6 @@
 library(randomForest)
 library(caret)
 
-
 source("./data-clean.R")
 source("./ML_utils.R")
 
@@ -22,6 +21,13 @@ rf_random <- train(model~., data=dataset, method="rf", metric=metric, tuneLength
 print(rf_random)
 plot(rf_random)
 
+#grid search
+control <- trainControl(method="cv", number=4, search="grid")
+set.seed(seed)
+tunegrid <- expand.grid(.mtry=c(1:15))
+rf_gridsearch <- train(model~., data=dataset, method="rf", metric=metric, tuneGrid=tunegrid, trControl=control)
+print(rf_gridsearch)
+plot(rf_gridsearch)
 
 # Number of trees 
 control <- trainControl(method="cv", number=4)
@@ -45,3 +51,4 @@ results <- resamples(modellist)
 summary(results)
 plot(results)
 #dotplot(results)
+
