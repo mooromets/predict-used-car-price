@@ -10,7 +10,10 @@ prepareBrandDataset <- function(data, brand) {
   # some factor variables might have lost some values
   out <- vars2Factor(out, c("vehicleType", "model", "fuelType", "brand"))
   # not unique variables
-  out <- remove0variance(out)  
+  out <- remove0variance(out)
+  #scale
+  numericVars <- c("price", "yearOfRegistration", "powerPS", "kilometer")
+  out[, numericVars] <- scale(out[, numericVars])
   # remove useless columns:
   out[, -which(colnames(out) %in% 
                       c("Longitude", "Latitude", "postalCode", 
