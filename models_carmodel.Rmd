@@ -21,9 +21,7 @@ length(unlist(unique(vw[, "model"])))
 ```
 ``` {r prepare}
 #small dataset with pre-cleaning
-dataset <- remove0variance(fixMissingFactors(vw[sample(nrow(vw), 
-                                                       size = 4000), 
-                                              ]))
+dataset <- remove0variance(droplevels(vw[sample(nrow(vw), size = 4000), ]))
 
 #setup
 seed <- 798
