@@ -65,14 +65,10 @@ full_auto_clean <- function(path = "./data/",
   clean_auto$State <- paste0("(", clean_auto$State.Abbreviation, ") ", clean_auto$State)
   
   ## convert to factor
-  clean_auto$brand <- factor(clean_auto$brand)
-  clean_auto$gearbox <- factor(clean_auto$gearbox)
-  clean_auto$postalCode <- factor(clean_auto$postalCode)
-  clean_auto$fuelType <- factor(clean_auto$fuelType)
-  clean_auto$notRepairedDamage <- factor(clean_auto$notRepairedDamage)
-  clean_auto$vehicleType <- factor(clean_auto$vehicleType)
-  clean_auto$State <- factor(clean_auto$State)
-  
+  toFactor <- c("brand", "gearbox", "postalCode", "fuelType",
+                "notRepairedDamage", "vehicleType", "State")
+  clean_auto[, toFactor] <- as.data.frame(apply(clean_auto[, toFactor], 2, as.factor))
+
   ## free memory
   rm(auto, postal)
   
