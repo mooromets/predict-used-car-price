@@ -1,0 +1,42 @@
+---
+title: "Tune C5.0 model"
+author: "sergey"
+date: "April 10, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+t1 <- Sys.time()
+require(C50)
+require(caret)
+```
+
+```{r prepare volkswagen data, message=FALSE, warning=FALSE}
+source("./ML_utils.R")
+
+set.seed(1357)
+dataset <- VWSample(4000)
+
+seed <- 8877
+metric <- "Accuracy"
+```
+
+## Grid
+```{r Grid}
+#Grid
+control <- trainControl(method="cv", number=4, search="random")
+set.seed(seed)
+
+grid <- expand.grid( .winnow = c(TRUE,FALSE), .trials=c(1,5,10,15,20), .model="tree" )
+
+mdl<- train(model~., data=dataset, method="C5.0", metric=metric, tuneGrid=grid, trControl=control, verbose=FALSE)
+
+# visualize the resample distributions
+plot(mdl,type = c("g", "p", "smooth"))
+```
+
+### Execution time
+```{r time, echo=FALSE}
+print (Sys.time() - t1)
+```
