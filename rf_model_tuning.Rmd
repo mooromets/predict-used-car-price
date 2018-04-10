@@ -15,13 +15,15 @@ require(caret)
 ```{r prepare volkswagen data, message=FALSE, warning=FALSE}
 source("./data-clean.R")
 source("./ML_utils.R")
-
-vw <- prepareBrandDataset(autoData(), "volkswagen")
+source("./quotaSample.R")
 
 #the clean dataset
-dataset <- remove0variance(droplevels(vw[sample(nrow(vw), size = 4000), ]))
+vw <- prepareBrandDataset(autoData(), "volkswagen")
 
-dataset <- droplevels(dataset)
+dataset <- quotaSample(vw,
+                       4000,
+                       c("model", "fuelType", "gearbox", "notRepairedDamage"))
+
 seed <- 8877
 metric <- "Accuracy"
 ```

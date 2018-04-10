@@ -20,6 +20,7 @@ prepareBrandDataset <- function(data, brand) {
                         "State.Abbreviation", "State", "name", "X"))]
 }
 
+
 #fix missing factor values
 fixMissingFactors <- function(df){
   vars2Factor(df = df,
@@ -28,6 +29,7 @@ fixMissingFactors <- function(df){
                                        is.factor(data[,x]), 
                                      df)])
 }
+
 
 #convert to factors the selected variables in data.frame 
 vars2Factor <- function(df, var) {
