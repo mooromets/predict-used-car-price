@@ -12,19 +12,10 @@ library(caret)
 ```
 
 ```{r prepare volkswagen data, warning = FALSE, message=FALSE}
-source("./data-clean.R")
 source("./ML_utils.R")
-source("./quotaSample.R")
 
-vw <- prepareBrandDataset(autoData(), "volkswagen")
-# number of models to predict:
-length(unlist(unique(vw[, "model"])))
-```
-``` {r prepare}
-#small dataset with pre-cleaning
-dataset <- quotaSample(vw,
-                       4000,
-                       c("model", "fuelType", "gearbox", "notRepairedDamage"))
+set.seed(1357)
+dataset <- VWSample(4000)
 
 #setup
 seed <- 798

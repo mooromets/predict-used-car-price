@@ -1,3 +1,5 @@
+source("./data-clean.R")
+source("./quotaSample.R")
 
 # get a subset from data with only selected brands
 # remove incomplete cases
@@ -53,4 +55,16 @@ defModelFit <- function(method, seed, ...) {
     modFit <- train(..., method = method)
   }))
   modFit
+}
+
+
+# Get a cars dataset sample for comparing and tuning models  
+VWSample <- function(size) {
+  out <- autoData()
+  if (nrow(out) > size) {
+    out <- quotaSample(prepareBrandDataset(out, "volkswagen"),
+                       size,
+                       c("model", "fuelType", "gearbox", "notRepairedDamage"))
+  }
+  out
 }

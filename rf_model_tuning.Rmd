@@ -13,16 +13,10 @@ require(caret)
 ```
 
 ```{r prepare volkswagen data, message=FALSE, warning=FALSE}
-source("./data-clean.R")
 source("./ML_utils.R")
-source("./quotaSample.R")
 
-#the clean dataset
-vw <- prepareBrandDataset(autoData(), "volkswagen")
-
-dataset <- quotaSample(vw,
-                       4000,
-                       c("model", "fuelType", "gearbox", "notRepairedDamage"))
+set.seed(1357)
+dataset <- VWSample(4000)
 
 seed <- 8877
 metric <- "Accuracy"
