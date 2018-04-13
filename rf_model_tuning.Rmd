@@ -13,7 +13,7 @@ require(caret)
 ```
 
 ```{r prepare volkswagen data, message=FALSE, warning=FALSE}
-source("./ML_utils.R")
+source("./R/ML_utils.R")
 
 set.seed(1357)
 dataset <- VWSample(4000)
