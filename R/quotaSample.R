@@ -6,9 +6,9 @@ require(fifer)
 #'@param size - The desired sample size.
 #'@param group - The grouping variables. 
 quotaSample <- function(data, size, group){
-  eachGroupSize <- round(size / prod(sapply(gr, function(x) {
-                                                  length(levels(dataset[,x]))
-                                                })))
+  eachGroupSize <- round(size / prod(sapply(group, function(x) {
+                                                    length(levels(data[,x]))
+                                                  })))
   #iteratively find the most accurate size of output dataset
   repeat {
     outData <- stratified(data, group, size = rep(eachGroupSize))

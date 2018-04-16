@@ -1,5 +1,5 @@
-source("./data-clean.R")
-source("./quotaSample.R")
+source("./R/data-clean.R")
+source("./R/quotaSample.R")
 
 # get a subset from data with only selected brands
 # remove incomplete cases
