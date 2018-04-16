@@ -28,7 +28,9 @@ preProc <- c("center", "scale")
 ## learning 
 ``` {r learning}
 results <- resamples(
-  c(sapply(X = c("nb", "rpart", "rf", "C5.0", "treebag", "PART", "J48"), #gbm?
+  c(sapply(X = c("rpart2",
+                 "nb", "rpart", "rf", "C5.0", "treebag", 
+                 "PART", "J48"), #gbm, bagEarth, gamboost ?
          FUN = defModelFit,
          seed = seed,
          form = model ~ .,
