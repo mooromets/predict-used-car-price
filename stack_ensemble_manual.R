@@ -8,17 +8,20 @@ trainSet <- VWSample(4000)
 set.seed(7531)
 testSet <- VWSample(1000)
 
+outcome <- c("model")
+predictors <- colnames(trainSet)[!colnames(trainSet) %in% outcome]
+
 preProc <- c("center", "scale")
 
 control <- trainControl(method="cv", 
-                        number=4,
-                        savePredictions = 'final', 
-                        classProbs = T)
+                        number=4) #,savePredictions = 'final', classProbs = T)
 
-model_rf <- train(model ~ ., data = trainSet, method = "rf", trControl = control)
-model_knn <- train(model ~ ., data = trainSet, method = "knn", 
-                   trControl = control, preProcess = preProc)
-model_c50 <- train(model ~ ., data = trainSet, method = "C5.0", trControl = control)
+model_rf <- train(trainSet[, predictors], trainSet[, outcome], 
+                  method = "rf", trControl = control)
+model_knn <- train(trainSet[, predictors], trainSet[, outcome], 
+                   method = "knn", trControl = control, preProcess = preProc)
+model_c50 <- train(trainSet[, predictors], trainSet[, outcome], 
+                   method = "C5.0", trControl = control)
 
 trainSet$OOF_pred_rf <- model_rf$pred$pred[order(model_rf$pred$rowIndex)]
 trainSet$OOF_pred_knn <- model_knn$pred$pred[order(model_knn$pred$rowIndex)]
