@@ -1,0 +1,41 @@
+---
+title: "Missing data exploration"
+author: "sergey"
+date: "April 24, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r source files, echo=FALSE}
+source("./R/ML_utils.R")
+source("./R/data-clean.R")
+```
+
+## Data in a nutschell
+```{r data, echo=FALSE}
+print(str(autodata()))
+```
+
+## Number of NA's in every column we're interested in
+### ("price", "vehicleType", "yearOfRegistration", "gearbox", "powerPS", "brand", "model", "kilometer", "fuelType", "notRepairedDamage")
+```{r NA total, echo=FALSE}
+vars <- c("price", "vehicleType", "yearOfRegistration", "gearbox", "powerPS", "brand", "model", "kilometer", "fuelType", "notRepairedDamage")
+
+numNA = sapply(vars, FUN = function(v)sum(is.na(autoData()[, v])))
+(numNA[numNA != 0])
+```
+
+## Observations with all NAs in needed columns
+```{r}
+lna <- sapply(names(numNA[numNA != 0]), 
+           FUN = function(nam) {
+             which(is.na(autoData()[, nam]))
+           },
+           simplify = FALSE)
+
+allNA <- Reduce(intersect, lna)
+print(length(allNA))
+```
