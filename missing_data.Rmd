@@ -28,14 +28,18 @@ numNA = sapply(vars, FUN = function(v)sum(is.na(autoData()[, v])))
 (numNA[numNA != 0])
 ```
 
-## Observations with all NAs in needed columns
+## Observations with all NAs in sought-for columns
 ```{r}
-lna <- sapply(names(numNA[numNA != 0]), 
-           FUN = function(nam) {
-             which(is.na(autoData()[, nam]))
-           },
-           simplify = FALSE)
+#get row indecies where all selected columns have NA
+idxAllNAs <- function(data, colnames) {
+  Reduce(intersect, 
+         sapply(colnames, 
+             FUN = function(nam) {
+               which(is.na(data[, nam]))
+             },
+             simplify = FALSE))
+}
 
-allNA <- Reduce(intersect, lna)
+allNA <- idxAllNAs(autoData(), names(numNA[numNA != 0]))
 print(length(allNA))
 ```
