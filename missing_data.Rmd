@@ -43,3 +43,16 @@ idxAllNAs <- function(data, colnames) {
 allNA <- idxAllNAs(autoData(), names(numNA[numNA != 0]))
 print(length(allNA))
 ```
+
+## Which (how many of) NAs are impossible to predict
+```{r}
+sapply(names(numNA[numNA != 0]), 
+       FUN = function(nam) {
+         idxAllNAs(autoData(), 
+                   setdiff(names(numNA[numNA != 0]), nam)) #skip this column
+       },
+       simplify = FALSE) -> impos
+
+print(sum(sapply(impos, length)))
+```
+
