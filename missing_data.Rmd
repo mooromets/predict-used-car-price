@@ -55,4 +55,3 @@ sapply(names(numNA[numNA != 0]),
 
 print(sum(sapply(impos, length)))
 ```
-

@@ -1,0 +1,27 @@
+---
+title: "Correct kilometer"
+author: "sergey"
+date: "April 25, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r source files, echo=FALSE}
+source("./R/ML_utils.R")
+source("./R/data-clean.R")
+```
+
+## Trendline at first place looks like this
+```{r , echo=FALSE}
+qplot(autoData()$yearOfRegistration, autoData()$kilometer) + geom_smooth()
+```
+
+That seems unlikely, as it seems there's no correlation that the older autos have more kilometers.  
+
+The number of cars with less or one year old and more than 100000 km is abnormal.
+```{r}
+(table(autoData()[autoData()$yearOfRegistration > 2010,]$kilometer, autoData()[autoData()$yearOfRegistration > 2010,]$yearOfRegistration))
+```
