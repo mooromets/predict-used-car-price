@@ -31,3 +31,27 @@ ggplot(autoData()[autoData()$yearOfRegistration > 2009,],
   geom_count() +
   scale_size_area()
 ```
+
+To calculate a true regression line or trend line, we create the next subset of a data:
+- skip the whole year-2016-data as it looks abnormal
+- skip the data, where the majority of km is 150000. As there's no values >150000 km, we're not able to distinguish between 150K and 250K. We'll take the subset in that years, where 150000km doesn't have a big share of observations.
+That's 2011 - 2015 period:
+```{r, echo=FALSE}
+ggplot(autoData()[autoData()$yearOfRegistration > 2008, ], 
+       aes(yearOfRegistration, kilometer)) +
+  geom_count(aes(size = ..prop.., group = yearOfRegistration)) +
+  scale_size_area(max_size = 10)
+```
+
+```{r, echo=FALSE}
+subData <- autoData()[autoData()$yearOfRegistration > 2010 & 
+                        autoData()$yearOfRegistration < 2016, 
+                      c("yearOfRegistration", "kilometer")]
+qplot(data = subData, x = yearOfRegistration, y = kilometer) + geom_smooth(method = "gam")
+```
+
+```{r}
+kmFit <- lm(data = subData, kilometer ~ yearOfRegistration)
+qplot(y = predict.lm(kmFit), x = subData$yearOfRegistration)
+```
+
