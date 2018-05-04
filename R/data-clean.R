@@ -69,6 +69,14 @@ full_auto_clean <- function(path = "./data/",
                 "notRepairedDamage", "vehicleType", "State")
   clean_auto[, toFactor] <- as.data.frame(apply(clean_auto[, toFactor], 2, as.factor))
 
+  ## correct kilometers
+  kmStart <- 2010
+  kmEnd <- 2016
+  kmFit <- lm(data = clean_auto[clean_auto$yearOfRegistration > kmStart & 
+                                    clean_auto$yearOfRegistration < kmEnd, 
+                                  c("yearOfRegistration", "kilometer")], 
+              kilometer ~ yearOfRegistration)
+
   ## free memory
   rm(auto, postal)
   
