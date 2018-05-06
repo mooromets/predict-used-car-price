@@ -76,6 +76,18 @@ full_auto_clean <- function(path = "./data/",
                                     clean_auto$yearOfRegistration < kmEnd, 
                                   c("yearOfRegistration", "kilometer")], 
               kilometer ~ yearOfRegistration)
+  
+  apply(clean_auto, 
+        1, 
+        FUN = function(row) {
+          round(as.numeric(
+            ifelse(as.numeric(row["yearOfRegistration"]) <= kmStart,
+                       max(as.numeric(row["kilometer"]), 
+                           as.numeric(row["yearOfRegistration"]) * 
+                             kmFit$coefficients[2] + 
+                             kmFit$coefficients[1]),
+                       row["kilometer"])))
+        }) -> clean_auto$kilometer
 
   ## free memory
   rm(auto, postal)
